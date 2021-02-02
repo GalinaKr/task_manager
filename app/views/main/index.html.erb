@@ -1,0 +1,160 @@
+<style>
+  .add_task_row {
+      background-color: #BBBBBB;
+  }
+  .project_header {
+      background-color: royalblue;
+  }
+  #task_line:focus {
+      cursor: pointer;
+      background-color: lightyellow;
+  }
+</style>
+
+
+<div class="container">
+
+  <div class="text-center">
+    <p class="h1"> SIMPLE TODO LISTS</p>
+    <p class="h3"> FROM RUBY GARAGE</p>
+  </div>
+
+  <% @projects.each do |project| %>
+    <div class="card mb-3">
+
+      <div class="card-header project_header">
+        <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+          <div class="col-md-1">
+            <i class="fa fa-2x fa-calendar-alt"></i>
+          </div>
+          <div class="col-md text-white">
+            <h5><%= project.name %></h5>
+          </div>
+
+          <div class="col-md-1 border-left">
+            <!-- Button trigger edit project modal -->
+            <button class="fa fa-pen" type="button" data-toggle="modal" data-target="#editProjectModal-<%= project.id %>" style="margin-right: 20px; color: lightgray;"></button>
+
+            <!-- edit project Modal -->
+            <div class="modal fade" id="editProjectModal-<%= project.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <%= form_for :project, url: update_project_path(project) do |f| %>
+                      <%= f.text_field :name, value: project.name %>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <%= f.submit "Save changes", class: "btn btn-primary" %>
+                      </div>
+                    <% end %>
+                    </div>
+              </div>
+            </div>
+
+            <%= link_to project, remote: true, method: 'delete', data: { confirm: "Are you sure?" } do %>
+              <i class="fa fa-trash-alt" style="color:lightgray"></i>
+            <% end %>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card-header add_task_row">
+
+
+          <%= form_for :task, url: add_task_path(project) do |f| %>
+          <div class="form-group" style="margin-bottom: 0px;">
+            <div class="form-row">
+              <div class="col-md-1 align-self-md-center">
+                <i class="fa fa-2x fa-plus" style="color: green"></i>
+              </div>
+              <div class="col no-gutters">
+                <%= f.text_field :name, id: "addTask", class: "form-control" %>
+              </div>
+              <div class="col-md-1">
+                <%= f.submit 'Add Task', class: "btn btn-primary" %>
+              </div>
+            </div>
+          </div>
+          <% end %>
+
+      </div>
+
+      <div class="card-body">
+
+
+        <% project.tasks.each do |task| %>
+          <div class="row border-bottom" style="margin-top: 10px;margin-bottom: 10px;" id="task_line">
+            <div class="col-md-1 border-right ">
+              <%= link_to task_status_path(task), remote: true, method: 'put' do %>
+                <input type="checkbox" id="taskStatus" <%= task.status == 'done' ? "checked" : "" %> >
+              <% end %>
+            </div>
+
+            <div class="col-md">
+              <%= task.name %>
+            </div>
+            <div class="col-md-1 border-left">
+              <!-- Button trigger edit task modal -->
+
+              <button class="fa fa-pen" type="button" data-toggle="modal" data-target="#editTaskModal-<%= task.id %>" style="margin-right: 20px; color: lightgray;"></button>
+
+              <!-- edit task Modal -->
+              <div class="modal fade" id="editTaskModal-<%= task.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Edit Task</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <%= form_for :task, url: update_task_path(task) do |f| %>
+                        <%= f.text_field :name, value: task.name %>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <%= f.submit "Save changes", class: "btn btn-primary" %>
+                        </div>
+                      <% end %>
+                      </div>
+                </div>
+              </div>
+
+                <%= link_to task, remote: true, method: 'delete', data: { confirm: "Are you sure?" } do %>
+                  <i class="fa fa-trash-alt" style="color: lightgray"></i>
+                <% end %>
+
+            </div>
+          </div>
+
+        <% end %>
+
+      </div>
+    </div>
+  <% end %>
+
+
+  <div class="text-center">
+
+    <button class="btn btn-primary text-white" type="button" data-toggle="modal" data-target="#addProjectModal">
+      <i class="fas fa-plus"></i> <b>Add TODO List</b>
+    </button>
+    <%= render 'projects/add_project' %>
+
+  </div>
+</div>
+
+<script>
+  $('#task_line').on('focus', function() {
+      $('#task_line').addClass('cursor: pointer')
+  })
+</script>

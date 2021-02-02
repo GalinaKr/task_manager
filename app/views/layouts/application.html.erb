@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TaskManager</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-mutate-approach="sync"></script>
+</head>
+
+<style>
+    body {
+        /* Градиент */
+        background: linear-gradient(#E8D9A9, #9A5044) fixed;
+    }
+</style>
+
+<body class="bg-gradient-danger">
+<%= yield %>
+</body>
+</html>
